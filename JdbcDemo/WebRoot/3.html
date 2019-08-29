@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+ 
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+        <script type="text/javascript">
+            //准备数据
+            var arr = ["1", "2", "3", "4", "5", "6"];
+            var index = -1; //标记被选中的块的id,下一次循环时将该块的背景改为原来的颜色
+            var time;
+            function nowfind() {
+				
+                if(index != -1) {
+                    //将上一个选中的div的背景还原
+                    document.getElementById("id" + index).style.backgroundColor = "gray";
+                }
+                //随机数
+                var num = Math.floor(Math.random() * arr.length);
+                index = num; //记录被选中的div的id
+                //获取对应的div
+                var div = document.getElementById("id" + num);
+                //设置背景颜色
+                div.style.backgroundColor = "pink";
+            }
+ 
+            function startF2() {
+                //调用计时器重复调用nowfind方法
+                time = setInterval("nowfind()",100);//赋值给变量以便于关闭调用
+            }
+ 
+            function endF2() {
+                //停止随机获取姓名
+                clearInterval(time);
+                alert("请"+arr[index]+"同学回答问题");
+            }
+ 
+            function init() {
+                //将数组显示在页面上
+                for(var i = 0; i < arr.length; i++) {
+                    //获取父容器
+                    var fa = document.getElementById("fa");
+                    //创建小div
+                    var div = document.createElement("div");
+                    //设置id属性,方便寻找
+                    div.id = "id" + i;
+                    div.className = "box"; //方便给小div设置样式
+                    //设置小div中显示的内容
+                    div.innerHTML = arr[i];
+                    //将小div放在父容器中
+                    fa.appendChild(div);
+                }
+ 
+            }
+        </script>
+        <style type="text/css">
+            .box {
+                width: 100px;
+                height: 50px;
+                background-color: gray;
+                text-align: center;
+                line-height: 50px;
+                margin: 10px;
+                float: left;
+            }
+        </style>
+    </head>
+ 
+    <body onload="init()">
+	<button onclick="startF2()">开始</button>
+	<button onclick="endF2()">结束</button>
+	<div id="fa">
+ 
+	</div>
+    </body>
+ 
+</html>

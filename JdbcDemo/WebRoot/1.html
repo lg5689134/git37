@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+  <!--   <script type="text/javascript" src="/practice/home/js/jquery.js"></script> -->
+</head>
+<body>
+<center>
+    <h1 style="font-size: 50px">点名表</h1>
+    <div id="c_name" class="unsetSomething" style="border: dashed;background:grey; height: 300px;width: 300px; line-height: 300px;font-size: 66px;"></div>
+    <input type="button" id="name" value="开始点名" onclick="check_name()" style="width: 300px;height: 50px;"/>
+</center>
+</body>
+</html>
+<script>
+    function check_class(){
+        var arr = Array('1','2','3','4','5');
+        var key=parseInt(Math.random()*arr.length);
+        document.getElementById("c_name").innerHTML=arr[key];
+    }
+    function check_name(){
+        var name=document.getElementById("name").value;
+        if(name=='开始点名'){
+            document.getElementById("name").value="停止点名";
+            a=setInterval('check_class()',10);//毫秒
+        }else{
+            document.getElementById("name").value="开始点名";
+            clearInterval(a)
+        }
+    }
+</script>

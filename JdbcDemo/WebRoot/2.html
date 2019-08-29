@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>随机点名器</title>
+    <style type="text/css">
+        *{margin: 0;padding: 0;}
+        .outer{
+            width: 400px;
+            height: 350px;
+            /*background:red;*/
+            margin: 10px auto;
+        }
+        #name{
+            width: 200px;
+            height: 250px;
+            margin: 10px auto;
+            text-align: center;
+            line-height: 250px;
+            font-size: 60px;
+            color:red;
+        }
+        button{
+            display: block;
+            width: 100px;
+            height: 50px;
+            font-size: 25px;
+            text-align: center;
+            margin: 200px auto 0;
+        }
+    </style>
+</head>
+<body>
+<div class="outer">
+    <div id="name">张三</div>  <!-- 初始值 -->
+    <button>开始</button>
+</div>
+</body>
+<script type="text/javascript">
+    var divs=document.getElementsByTagName('div')[1];
+    var btn=document.getElementsByTagName("button")[0];
+    var flag=true,timer=null;
+    var arr=["张三","李四","王五","赵六","田七","雷老虎"];//姓名数组
+    btn.onclick=function(){
+        if (flag) {
+            timer=setInterval(function(){
+                divs.innerHTML=ram();
+            },20)
+            btn.innerHTML="停止";
+            flag=false;
+        }else{
+            clearInterval(timer);
+            btn.innerHTML="开始";
+            flag=true;
+        }
+    }
+    function ram(){
+        var x=Math.floor(Math.random()*arr.length);
+        var result=arr[x];
+        return result;
+    }
+</script>
+</html>

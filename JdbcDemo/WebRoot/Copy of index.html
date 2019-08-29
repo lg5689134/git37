@@ -1,0 +1,214 @@
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">  
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>  
+    <title>demo</title>  
+    <script src="../js/jquery-1.11.3.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        html, body, .view {
+            width: 100%;
+            height: 100%;
+            background: #ddd;
+        }
+        .awardCtn {
+            width: 90%;
+            height: 90%;
+            transform: translate(5%, 5%);
+            position: relative;
+        }
+        .place {
+            float: left;
+            box-sizing: border-box;
+            border-radius: 5px;
+            overflow: hidden;
+            border: 1px solid white;
+        }
+        .place img {
+            width: 100%;
+            height: 100%;
+        }
+        .awardShow {
+            position: absolute;
+            background: #fcffe5;
+        }
+        .red {
+            border: 4px solid blue;
+        }
+        .grey {
+            border: 4px solid red;
+        }
+        .start {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 50px;
+            color: white;
+            background: #FF745B;
+            border: 2px solid #e8634a;
+            cursor: pointer;
+            border-radius: 35px;
+        }
+        .show {
+            width: 100%;
+            height: 100%;
+        }
+        .awardPhoto {
+            float: left;
+            height: 100%;
+        }
+        .awardPhoto img {
+            max-width: 100%;
+            height: 100%;
+            margin: 0 auto;
+            display: block;
+            box-sizing: border-box;
+            padding: 5px;
+        }
+    </style>
+</head>  
+<body>  
+    <div class="view">
+        行数：<input class="a" type="text" value="8" />
+        列数：<input class="b" type="text" value="12" />
+        每次选中个数：<input class="c" type="text" value="4" />
+        <button class="d">初始化</button>
+        <div class="awardCtn">
+            <div class="awardShow">
+                <button class="start">开始抽奖</button>
+                <div class="show"></div>
+            </div>
+        </div>
+    </div>
+<script>  
+    $(function() {
+        $('.d').on('click', function() {
+            // 假设总照片数 36
+            var oneTimeShowNum = $('.c').val() || 4,// 每次选中个数
+                line = [+($('.a').val() || 8), (+$('.b').val() || 12)];// 行、列数
+
+            var maxNum = (line[0]+line[1])*2-4;// 最大照片数
+
+            // 生成div
+            var html = '';
+            for(var i=0; i<line[0]; i++) {
+                for(var j=0; j<line[1]; j++) {
+                    html += '<div class="place" x="'+ j +'" y="'+ i +'"><img></div>';
+                }
+            }
+            $('.awardCtn').append(html);
+
+            $('.place').css({
+                'width': 100/line[1] +'%',
+                'height': 100/line[0] +'%'
+            })
+            $('.awardShow').css({
+                'width': (100-100/line[1]*2) +'%',
+                'height': (100-100/line[0]*2) +'%',
+                'top': 100/line[0] +'%',
+                'left': 100/line[1] +'%'
+            })
+            $('head').append('<style>.awardPhoto {width: '+ 100/oneTimeShowNum +'%}</style>');
+
+            // 标序号
+            var index = 0,
+                x = 0,
+                y = 0;
+
+            while(x<line[1]-1) {
+                index++;
+                $('[x='+x+'][y='+y+']').attr('index', index);
+                x++;
+            }
+            while(y<line[0]-1) {
+                index++;
+                $('[x='+x+'][y='+y+']').attr('index', index);
+                y++;
+            }
+            while(x>0) {
+                index++;
+                $('[x='+x+'][y='+y+']').attr('index', index);
+                x--;
+            }
+            while(y>0) {
+                index++;
+                $('[x='+x+'][y='+y+']').attr('index', index);
+                y--;
+            }
+
+            $('.place:not([index]) img').remove();
+            // 设置图片
+            $('[index]').each(function(i) {
+                $('img', this).attr('src', 'src/'+ $(this).attr('index') +'.png');
+            })
+
+            $('.awardShow').on('mouseenter', function() {
+                $('.start').show();
+            })
+            $('.awardShow').on('mouseleave', function() {
+                $('.start').hide();
+            })
+
+            // 开始抽奖
+            $('.start').on('click', function() {
+                var $this = $(this);
+                $this.attr('disabled', true).hide();
+                $('.show').empty();
+
+                var time = 0,
+                    cur = 1;
+                (function fun() {
+                    var $awardPhoto = $('<div class="awardPhoto"><img></div>').appendTo('.show');
+                        vOld = vNew = parseInt(Math.random()*30)+30;
+                    (function timer() {
+                        setTimeout(function() {
+                            var num = cur%maxNum;
+                            var sameTime = 0
+                            while($('[index='+ (num?num:maxNum) +']').is('.grey')) {
+                                if(sameTime>maxNum) {
+                                    $('.start').off('click');
+                                    break;
+                                }
+                                cur++;
+                                sameTime++;
+                                num = cur%maxNum;
+                            }
+                            if(vNew>1) {
+                                $('[index]').removeClass('red');
+                                $('[index='+ (num?num:maxNum) +']').addClass('red');
+                                $('img', $awardPhoto).attr('src', 'src/'+ (num?num:maxNum) +'.png');
+                                cur++;
+
+                                if(vNew>10) {
+                                    vNew *= .99;
+                                }else {
+                                    vNew *= .97;
+                                }
+
+                                timer();
+                            }else{
+                                $('.red').addClass('grey');
+                                if(time < oneTimeShowNum-1) {
+                                    time++;
+                                    fun();
+                                }else {
+                                    $this.removeAttr('disabled');
+                                }
+                            }
+                        }, vNew>10?vNew:vOld-vNew);          
+                    })();
+                })();
+            })
+        })
+    })
+</script>  
+</body>  
+</html>

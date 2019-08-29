@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<title>时间</title>
+	<style type="text/css">
+	body{
+	background-color: yellow;
+	}
+	.btn{
+		background-color:pink;
+		height: 30px;
+		width: 80px;
+		border: 50px;
+		margin-top: 100px;	
+	}
+	.timer{
+	font-size:20px;
+	float:right;
+	margin-right: 200px;
+	color: red;
+	}
+	.classname{
+	font-size:20px;
+	float:right;
+	margin-right: 260px;
+	margin-top:50px;
+	color: blue;
+	}
+	</style>
+</head>
+
+<body>
+	<div style="text-align: center;"><h2>我的日历</h2></div>
+	<div id="maincontent"  class="timer"></div>
+	<div id="stuname"  class="classname"></div>
+	<div style="text-align: center;margin-top: 100px;">
+	<button id="start" class="btn">开始</button>
+	<button id="end" class="btn">停止</button>
+	</div>
+	<script type="text/javascript">
+	
+	var arr=["11","22","33","44"];
+	var t;
+	var index;
+	setInterval(setTimeHtml, 1000);
+     document.getElementById("start").onclick=function (){
+     	t=setInterval(getRandom, 100);
+     	
+     }
+     
+     function getRandom(){
+	     if(arr.length>0){
+	     	index=Math.floor(Math.random()*arr.length);
+	     	document.getElementById("stuname").innerHTML=arr[index];
+	     }else{
+	     document.getElementById("stuname").innerHTML="<a href='javascript:location.reload();'>重新开始</a>";
+	     
+	     }
+     	 
+     	
+     }
+     function setTimeHtml(){
+       var date=new Date();
+        document.getElementById("maincontent").innerHTML=
+        date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDay()+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+  }
+     document.getElementById("end").onclick=function (){
+     	arr.splice(index,1);
+     	clearInterval(t);
+     }
+	
+	</script>
+</body>
+</html>
